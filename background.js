@@ -4,6 +4,6 @@ chrome.action.onClicked.addListener(async function(tab) {
         files: ["content.js"]
     });
 
-    //This return statement is needed to prevent the event from firing multiple times
+    // This return statement is needed to prevent the event from firing multiple times
     return true;
 });
