@@ -11,12 +11,5 @@
       "matches": ["https://*.atlassian.net/browse/*"],
       "js": ["content.js"]
     }
-  ],
-  "permissions": [
-    "scripting"
-  ],
-  "host_permissions": [
-    "http://*/",
-    "https://*/"
   ]
 }

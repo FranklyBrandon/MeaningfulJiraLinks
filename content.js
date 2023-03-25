@@ -54,7 +54,7 @@ function copyToClipboard(html, plainText) {
     // Hook into the 'copy' command to set the clipboard data as html instead of plain text
     function listener(e) {
         e.clipboardData.setData("text/html", html);
-        // Add the plaintext data incase it's pasted into something like notepad
+        // Add the plain text data incase it's pasted into something like notepad
         e.clipboardData.setData("text/plain", plainText);
         e.preventDefault();
     }
