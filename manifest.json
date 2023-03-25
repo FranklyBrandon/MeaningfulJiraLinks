@@ -6,9 +6,12 @@
   "action": {
     "default_title": "Meanignful Jira Links"
   },
-  "background": {
-    "service_worker": "background.js"
-  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.atlassian.net/browse/*"],
+      "js": ["content.js"]
+    }
+  ],
   "permissions": [
     "scripting"
   ],
