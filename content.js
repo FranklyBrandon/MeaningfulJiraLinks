@@ -43,4 +43,4 @@ function copyToClipboard(str) {
     // This is deprecated, but 'navigator.clipBoard' does not work due to a quirk with Chrome extensions
     document.execCommand("copy");
     document.removeEventListener("copy", listener);
-};
+}
