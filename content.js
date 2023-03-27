@@ -1,4 +1,5 @@
 const copyButtonId = 'meaningful-jira-links';
+addCopyButton();
 addJiraCopyButtonObserver();
 
 function addJiraCopyButtonObserver() {
