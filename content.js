@@ -53,21 +53,6 @@ function addCopyButton() {
     jiraButtonContainer.insertBefore(copyButtonDiv, jiraButtonContainer.children[3]);
 }
 
-function getTicketNumber(url) {
-    const beginIndex = url.href.lastIndexOf('/');
-    // Avoid copying path parameters if present
-    const endIndex = url.href.indexOf('?');
-
-    var ticketNumber;
-    if (endIndex === -1) {
-        ticketNumber = url.href.substring(beginIndex + 1)
-    } else {
-        ticketNumber = url.href.substring(beginIndex + 1, endIndex)
-    }
-
-    return ticketNumber;
-}
-
 // Format hyperlinks as html elements so apps like Teams and Word can display them as rich text
 function getHyperlinkText(url, displayText) {
     return `<html>
