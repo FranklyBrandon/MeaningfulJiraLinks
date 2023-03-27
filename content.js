@@ -1,8 +1,18 @@
-addCopyButton();
-
-function addCopyButton() {
+const observer = new MutationObserver(function (mutations, mutationInstance) {
     // Button container under the header on atlassian.net Jira tickets 
     const buttonDiv = document.querySelector('._otyr1y44._ca0q1y44._u5f3idpf._n3td1y44._19bvidpf._1e0c116y')
+    if (buttonDiv) {
+        addCopyButton(buttonDiv);
+        mutationInstance.disconnect();
+    }
+});
+
+observer.observe(document, {
+    childList: true,
+    subtree: true
+});
+
+function addCopyButton(buttonDiv) {
     const copyButtonDiv = document.createElement("div");
     const copyButton = document.createElement("button");
 
