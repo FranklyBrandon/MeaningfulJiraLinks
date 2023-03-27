@@ -1,5 +1,5 @@
 const copyButtonId = 'meaningful-jira-links';
-// Add copy button for static page in the 'bowse' view
+// Add copy button for static page in the 'browse' view
 addCopyButton();
 // Add observer that will add copy button for the dynamic page in the 'backlog' view
 addBacklogObserver();
