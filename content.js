@@ -1,19 +1,21 @@
-const observer = new MutationObserver(function (mutations, mutationInstance) {
-    var baseContainer = document.querySelector('._4t3i1osq');
-    var jiraButtonContainer = baseContainer && baseContainer.querySelector('._otyr1y44._ca0q1y44._u5f3idpf._n3td1y44._19bvidpf._1e0c116y');
+const copyButtonId = 'meaningful-jira-links';
+// Add copy button for static page in the 'bowse' view
+addCopyButton();
+// Add observer that will add copy button for the dynamic page in the 'backlog' view
+addBacklogObserver();
 
-    if (jiraButtonContainer) {
-        addCopyButton(baseContainer, jiraButtonContainer);
-        mutationInstance.disconnect();
+function addCopyButton() {
+    const existingCopyButton = document.getElementById(copyButtonId);
+    if (existingCopyButton) {
+        return;
     }
-});
 
-observer.observe(document, {
-    childList: true,
-    subtree: true
-});
+    const baseContainer = document.querySelector('._4t3i1osq');
+    const jiraButtonContainer = baseContainer && baseContainer.querySelector('._otyr1y44._ca0q1y44._u5f3idpf._n3td1y44._19bvidpf._1e0c116y');
+    if (!jiraButtonContainer) {
+        return;
+    }
 
-function addCopyButton(baseContainer, jiraButtonContainer) {
     const copyButtonDiv = document.createElement("div");
     const copyButton = document.createElement("button");
 
@@ -21,6 +23,7 @@ function addCopyButton(baseContainer, jiraButtonContainer) {
     copyButtonDiv.setAttribute('role', 'presentation');
     copyButtonDiv.classList.add('_2hwxftgi');
     copyButton.classList.add('css-8e6fqr');
+    copyButton.id = copyButtonId;
 
     copyButton.onclick = function() {
         const ticketHeader = baseContainer.querySelector('h1').innerHTML;
@@ -38,6 +41,23 @@ function addCopyButton(baseContainer, jiraButtonContainer) {
     copyButtonDiv.appendChild(copyButton);
 
     jiraButtonContainer.insertBefore(copyButtonDiv, jiraButtonContainer.children[3]);
+}
+
+function addBacklogObserver() {
+    const backlogDetailViewContainer = document.querySelector('#ghx-detail-view');
+    if (!backlogDetailViewContainer) {
+        return;
+    }
+
+    const observer = new MutationObserver(function () {
+        addCopyButton();
+    });
+
+    observer.observe(backlogDetailViewContainer, {
+        childList: true,
+        subtree: true,
+        attributes: true
+    });
 }
 
 function getTicketNumber(url) {
