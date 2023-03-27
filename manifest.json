@@ -8,7 +8,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://*.atlassian.net/browse/*", "https://*.atlassian.net/*/backlog*"],
+      "matches": ["https://*.atlassian.net/*"],
       "js": ["content.js"]
     }
   ]
