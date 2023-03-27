@@ -1,8 +1,9 @@
 const observer = new MutationObserver(function (mutations, mutationInstance) {
-    // Button container under the header on atlassian.net Jira tickets 
-    const buttonDiv = document.querySelector('._otyr1y44._ca0q1y44._u5f3idpf._n3td1y44._19bvidpf._1e0c116y')
-    if (buttonDiv) {
-        addCopyButton(buttonDiv);
+    var baseContainer = document.querySelector('._4t3i1osq');
+    var jiraButtonContainer = baseContainer && baseContainer.querySelector('._otyr1y44._ca0q1y44._u5f3idpf._n3td1y44._19bvidpf._1e0c116y');
+
+    if (jiraButtonContainer) {
+        addCopyButton(baseContainer, jiraButtonContainer);
         mutationInstance.disconnect();
     }
 });
@@ -12,7 +13,7 @@ observer.observe(document, {
     subtree: true
 });
 
-function addCopyButton(buttonDiv) {
+function addCopyButton(baseContainer, jiraButtonContainer) {
     const copyButtonDiv = document.createElement("div");
     const copyButton = document.createElement("button");
 
@@ -22,18 +23,21 @@ function addCopyButton(buttonDiv) {
     copyButton.classList.add('css-8e6fqr');
 
     copyButton.onclick = function() {
-        const ticketHeader = document.querySelector('h1').innerHTML;
-        const url = window.location;
-        const ticketNumber = getTicketNumber(url);
+        const ticketHeader = baseContainer.querySelector('h1').innerHTML;
+        const jiraTicketAnchorNodes = baseContainer.querySelectorAll('a[href*="/browse/"].css-xby519');
+        const jiraTicketAnchor = jiraTicketAnchorNodes[jiraTicketAnchorNodes.length - 1];
+
+        const ticketNumber = jiraTicketAnchor.querySelector('span').innerText;
+        const ticketURL = jiraTicketAnchor.href;
         const linkText = `[${ticketNumber}] - ${ticketHeader}`;
 
-        copyToClipboard(getHyperlinkText(url.href, linkText), url.href);
+        copyToClipboard(getHyperlinkText(ticketURL, linkText), ticketURL);
     };
     
     copyButton.appendChild(document.createTextNode("Copy Link!"));
     copyButtonDiv.appendChild(copyButton);
 
-    buttonDiv.insertBefore(copyButtonDiv, buttonDiv.children[3]);
+    jiraButtonContainer.insertBefore(copyButtonDiv, jiraButtonContainer.children[3]);
 }
 
 function getTicketNumber(url) {
