@@ -1,4 +1,3 @@
-const copyButtonId = 'meaningful-jira-links';
 addCopyButton();
 addJiraCopyButtonObserver();
 
@@ -20,37 +19,23 @@ function addCopyButton() {
         return;
     }
 
-    const baseContainer = document.querySelector('._4t3i1osq');
-    const jiraButtonContainer = baseContainer && baseContainer.querySelector('._otyr1y44._ca0q1y44._u5f3idpf._n3td1y44._19bvidpf._1e0c116y');
-    if (!jiraButtonContainer) {
+    const ticketNumber = getTicketNumber(window.location);
+    const jiraTicketAnchor = document.querySelector(`a[href*="/browse/${ticketNumber}"][target="_blank"]`);
+    const ticketHeaderElement = document.querySelector('h1[data-test-id*="issue-base"]');
+
+    if (!jiraTicketAnchor || !ticketHeaderElement) {
         return;
     }
 
-    const copyButtonDiv = document.createElement("div");
-    const copyButton = document.createElement("button");
+    const jiraTicketAnchorContainer = jiraTicketAnchor.parentNode.parentNode.parentNode.parentNode;
+    const ticketHeader = ticketHeaderElement.innerHTML;
 
-    // Jira ticket page class specific CSS
-    copyButtonDiv.setAttribute('role', 'presentation');
-    copyButton.classList.add('_2hwxftgi');
-    copyButton.classList.add('css-gon3qk');
-    copyButton.id = copyButtonId;
+    if (!jiraTicketAnchorContainer) {
+        return;
+    }
 
-    copyButton.onclick = function() {
-        var ticketNumber = getTicketNumber(window.location);
-        console.log(ticketNumber);
- 
-        const ticketHeader = baseContainer.querySelector('h1').innerHTML;
-        const jiraTicketAnchor = baseContainer.querySelector(`a[href*="/browse/${ticketNumber}"]`);
-        const ticketURL = jiraTicketAnchor.href;
-        const linkText = `[${ticketNumber}] - ${ticketHeader}`;
-
-        copyToClipboard(getHyperlinkText(ticketURL, linkText), ticketURL);
-    };
-
-    copyButton.appendChild(document.createTextNode("Copy Link!"));
-    copyButtonDiv.appendChild(copyButton);
- 
-    jiraButtonContainer.insertBefore(copyButtonDiv, jiraButtonContainer.children[3]);
+    const copyButtonElement = CreateCopyButton(ticketNumber, ticketHeader, jiraTicketAnchor);
+    jiraTicketAnchorContainer.insertBefore(copyButtonElement, jiraTicketAnchorContainer.lastElementChild);
 }
 
 function getTicketNumber(url) {
@@ -65,7 +50,7 @@ function getTicketNumber(url) {
     const browseBeginToken = '/browse/';
     const browseBeginIndex = url.href.lastIndexOf(browseBeginToken);
     // Avoid copying path parameters if present
-    const browseEndIndex = url.href.indexOf('?');
+    const browseEndIndex = url.href.indexOf('?'); 
 
     if (browseEndIndex === -1) {
         return url.href.substring(browseBeginIndex + browseBeginToken.length)
@@ -81,6 +66,25 @@ function getHyperlinkText(url, displayText) {
     <a href='${url}'>${displayText}</a>
     </body>
     </html>`
+}
+ 
+function CreateCopyButton(ticketNumber, ticketHeader, jiraTicketAnchor) {
+    const copyButtonDiv = document.createElement("div");
+    const copyButton = document.createElement("button");
+    copyButton.style = copyButtonStyle;
+    copyButton.id = copyButtonId;
+
+    copyButton.onclick = function() {
+        const ticketURL = jiraTicketAnchor.href;
+        const linkText = `[${ticketNumber}] - ${ticketHeader}`; 
+
+        copyToClipboard(getHyperlinkText(ticketURL, linkText), ticketURL);
+    };
+
+    copyButton.appendChild(document.createTextNode("Copy Link!"));
+    copyButtonDiv.appendChild(copyButton);
+
+    return copyButtonDiv;
 }
 
 function copyToClipboard(html, plainText) {
